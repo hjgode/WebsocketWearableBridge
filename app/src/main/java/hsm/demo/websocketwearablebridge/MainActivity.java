@@ -51,12 +51,14 @@ public class MainActivity extends AppCompatActivity {
                 addLog(msg.toString());
 
                 Bundle bundle=msg.getData();
-                if(bundle.containsKey(Constants.DEVICE_NAME)) {
-                    String sDevice = bundle.get(Constants.DEVICE_NAME).toString();
-                    if (sDevice != null) {
-                        addLog("connected to " + sDevice);
-                        if(mServer!=null) {
-                            mServer.sendMessage(btScanCtrl.setDoBeep());
+                if (msg.what==Constants.MESSAGE_DEVICE_NAME){
+                    if(bundle.containsKey(Constants.DEVICE_NAME)) {
+                        String sDevice = bundle.get(Constants.DEVICE_NAME).toString();
+                        if (sDevice != null) {
+                            addLog("connected to " + sDevice);
+                            if(mServer!=null) {
+                                mServer.sendMessage(btScanCtrl.setDoBeep());
+                            }
                         }
                     }
                 }else if (msg.what==Constants.MESSAGE_READ) {
