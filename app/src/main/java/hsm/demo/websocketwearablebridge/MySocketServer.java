@@ -1,5 +1,8 @@
 package hsm.demo.websocketwearablebridge;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.util.Log;
 
 import org.java_websocket.WebSocket;
@@ -7,17 +10,31 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
+
+import android.os.Handler;
 
 import de.greenrobot.event.EventBus;
 
 public class MySocketServer extends WebSocketServer {
 
     private WebSocket mSocket;
-    private static final String TAG = "MyApplication";
+    private static final String TAG = "MySocketServer";
 
-    public MySocketServer(InetSocketAddress address) {
+    BTScannerService btScannerService=null;
+    private Context m_context;
+    private Handler m_handler;
+
+    public MySocketServer(InetSocketAddress address, Context context, Handler handler) {
         super(address);
+        m_context=context;
+        m_handler=handler;
         Log.d(TAG, "MySocketServer Started");
+        EventBus.getDefault().register(this);
+    }
+
+    public void finalize() {
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -31,10 +48,21 @@ public class MySocketServer extends WebSocketServer {
         Log.d(TAG, "MySocketServer onClose");
     }
 
+    /// Messages received by a WebSocket client (HTML browser web page)
     @Override
     public void onMessage(WebSocket conn, String message) {
-        Log.d(TAG, "MySocketServer onMessage");
-        EventBus.getDefault().post(new SocketMessageEvent(message));
+        Log.d(TAG, "MySocketServer onMessage: " + message);
+        if(!message.startsWith("BTSEND")) {
+            EventBus.getDefault().post(new SocketMessageEvent(message));
+        }else {
+            if (btScannerService.getState() == Constants.STATE_CONNECTED) {
+                String btSend=message.substring("BTSEND".length());
+                if(btSend=="BEEP")
+                    btScannerService.write(btScanCtrl.setDoBeep());
+                else
+                    btScannerService.write(btScanCtrl.myGetBytes(btSend));
+            }
+        }
     }
 
     @Override
@@ -43,7 +71,43 @@ public class MySocketServer extends WebSocketServer {
     }
 
     public void sendMessage(String message) {
-        mSocket.send(message);
-        Log.d(TAG, "MySocketServer sendMessage");
+        if(mSocket!=null) {
+            mSocket.send(message);
+            Log.d(TAG, "MySocketServer sendMessage: "+message);
+        }
+        else {
+            Log.d(TAG, "MySocketServer sendMessage: " + "socket not connected");
+        }
+    }
+    public void sendMessage(byte[] message) {
+        String sMsg = new String(message, StandardCharsets.UTF_8);
+        if(mSocket!=null) {
+            mSocket.send(sMsg);
+            Log.d(TAG, "MySocketServer sendMessage: "+sMsg);
+        }
+        else {
+            Log.d(TAG, "MySocketServer sendMessage: " + "socket not connected");
+        }
+
+    }
+
+    BluetoothAdapter mBluetoothAdapter=null;
+    BluetoothDevice device=null;
+    @SuppressWarnings("UnusedDeclaration")
+    public void onEvent(SocketControlEvent event) {
+        String message=event.getMessage();
+        Log.d(TAG, "onEvent SocketControlEvent: " + message);
+        //sendMessage(message);
+        if(message.startsWith(Constants.BT_CONNECT_MAC)){
+            String sMac=message.substring(Constants.BT_CONNECT_MAC.length());
+            btScannerService=new BTScannerService(m_context, m_handler);
+            // Get local Bluetooth adapter
+            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            //find device
+            device = mBluetoothAdapter.getRemoteDevice(sMac);
+            //connect to BT device
+            btScannerService.connect(device);
+            Log.d(TAG, "scanner service state="+btScannerService.getState());
+        }
     }
 }

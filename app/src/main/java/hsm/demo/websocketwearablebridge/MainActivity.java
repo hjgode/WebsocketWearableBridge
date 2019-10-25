@@ -2,11 +2,20 @@ package hsm.demo.websocketwearablebridge;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -23,18 +32,93 @@ public class MainActivity extends AppCompatActivity {
 
     private MySocketServer mServer;
 
+    Button btnServer1;
+
     TextView txtLog;
+
+    Context m_context=this;
+    static Handler m_handler=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        m_handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                addLog(msg.toString());
+
+                Bundle bundle=msg.getData();
+                if(bundle.containsKey(Constants.DEVICE_NAME)) {
+                    String sDevice = bundle.get(Constants.DEVICE_NAME).toString();
+                    if (sDevice != null) {
+                        addLog("connected to " + sDevice);
+                        if(mServer!=null) {
+                            mServer.sendMessage(btScanCtrl.setDoBeep());
+                        }
+                    }
+                }else if (msg.what==Constants.MESSAGE_READ) {
+                    if(mServer!=null) {
+                        byte[] bData=msg.getData().getByteArray("DATA");
+                        try {
+                            mServer.sendMessage(new String(bData, "UTF-8"));
+                        }catch (UnsupportedEncodingException e){
+
+                        }
+                    }
+                }
+            }
+        };
+
         txtLog=findViewById(R.id.txtLog);
         txtLog.setMovementMethod(new ScrollingMovementMethod());
 
-        startServer();
+        Button btnSend=findViewById(R.id.btnSend);
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mServer!=null){
+                    EventBus.getDefault().post(new SocketControlEvent(Constants.BT_CONNECT_MAC+"C0:EE:40:41:51:B7")); // c0:ee:40:41:51:b7
+                }
+
+            }
+        });
+
+        Button btnBeep=findViewById(R.id.btnBeep);
+        btnBeep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mServer!=null){
+                    if(mServer.btScannerService!=null){
+                        mServer.btScannerService.write(btScanCtrl.setDoBeep());
+                    }
+                }
+            }
+        });
+
+        btnServer1=findViewById(R.id.btnServer1);
+        btnServer1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mServer==null)
+                    startServer();
+            }
+        });
+
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop(){
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
     }
     private void startServer() {
         InetAddress inetAddress = getInetAddress();
@@ -44,8 +128,11 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        mServer = new MySocketServer(new InetSocketAddress(inetAddress.getHostAddress(), SERVER_PORT));
+        mServer = new MySocketServer(new InetSocketAddress(inetAddress.getHostAddress(), SERVER_PORT), m_context, m_handler );
         mServer.start();
+
+        //now we can control or let the WebSocket server write to clients
+        EventBus.getDefault().post(new SocketControlEvent("Hello"));
     }
 
     private static InetAddress getInetAddress() {
@@ -86,4 +173,59 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    void checkPermissions(){
+        if (    m_context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                m_context.checkSelfPermission(Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED ||
+                m_context.checkSelfPermission(Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED ||
+                m_context.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            requestPermissions(new String[]{
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.BLUETOOTH,
+                    Manifest.permission.BLUETOOTH_ADMIN,
+                    Manifest.permission.ACCESS_COARSE_LOCATION}, Constants.REQUEST_WRITE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case Constants.REQUEST_WRITE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i(TAG, "Permission granted: WRITE_EXTERNAL_STORAGE");
+                    //do here
+
+                } else {
+                    Toast.makeText(m_context, "The app was not allowed to write in your storage", Toast.LENGTH_LONG).show();
+                }
+            }
+            case Constants.REQUEST_BT: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //do here
+                    Log.i(TAG, "Permission granted: BLUETOOTH");
+                } else {
+                    Toast.makeText(m_context, "The app was not allowed to use Bluetooth", Toast.LENGTH_LONG).show();
+                }
+            }
+            case Constants.REQUEST_BTADMIN: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //do here
+                    Log.i(TAG, "Permission granted: BLUETOOTH_ADMIN");
+                } else {
+                    Toast.makeText(m_context, "The app was not allowed to manage Bluetooth", Toast.LENGTH_LONG).show();
+                }
+            }
+            case Constants.REQUEST_LOCATION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //do here
+                    Log.i(TAG, "Permission granted: ACCESS_COARSE_LOCATION");
+                } else {
+                    Toast.makeText(m_context, "The app was not allowed to use Coarse Location", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
 }
