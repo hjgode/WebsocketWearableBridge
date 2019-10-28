@@ -26,4 +26,5 @@ public class Constants {
     public static final int STATE_CONNECTED = 3;  // now connected to a remote device
 
     public static final String BT_CONNECT_MAC = "BTCONNECT";
+    public static final String BT_DISCONNECT ="BTDISCONNECT";
 }

@@ -52,9 +52,21 @@ public class MySocketServer extends WebSocketServer {
     @Override
     public void onMessage(WebSocket conn, String message) {
         Log.d(TAG, "MySocketServer onMessage: " + message);
-        if(!message.startsWith("BTSEND")) {
-            EventBus.getDefault().post(new SocketMessageEvent(message));
-        }else {
+        if(message.startsWith(Constants.BT_CONNECT_MAC)){
+            String sMac=message.substring(Constants.BT_CONNECT_MAC.length());
+            btScannerService=new BTScannerService(m_context, m_handler);
+            // Get local Bluetooth adapter
+            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            //find device
+            device = mBluetoothAdapter.getRemoteDevice(sMac);
+            //connect to BT device
+            btScannerService.connect(device);
+            Log.d(TAG, "scanner service state="+btScannerService.getState());
+        }else if(message.startsWith(Constants.BT_DISCONNECT)){
+            btScannerService.stop();
+        }
+        else if(message.startsWith("BTSEND"))
+        {
             if (btScannerService.getState() == Constants.STATE_CONNECTED) {
                 String btSend=message.substring("BTSEND".length());
                 if(btSend=="BEEP")
@@ -62,6 +74,9 @@ public class MySocketServer extends WebSocketServer {
                 else
                     btScannerService.write(btScanCtrl.myGetBytes(btSend));
             }
+        }
+        else{
+            EventBus.getDefault().post(new SocketMessageEvent(message));
         }
     }
 

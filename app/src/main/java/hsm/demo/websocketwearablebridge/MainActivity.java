@@ -65,7 +65,12 @@ public class MainActivity extends AppCompatActivity {
                     if(mServer!=null) {
                         byte[] bData=msg.getData().getByteArray("DATA");
                         try {
-                            mServer.sendMessage(new String(bData, "UTF-8"));
+                            String sData = new String(bData, "UTF-8");
+                            if(sData.contains("\u0006") || sData.contains("\u0015")) { // 06=ACK, 21(0x15)=NAK
+                                mServer.sendMessage(sData);
+                            }else{
+                                mServer.sendMessage("SCAN_DATA" + sData);
+                            }
                         }catch (UnsupportedEncodingException e){
 
                         }

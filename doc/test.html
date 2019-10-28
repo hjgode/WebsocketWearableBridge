@@ -4,39 +4,41 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script type="text/javaScript">
-  var logMsgElement;
+//  var logMsgElement;
   var connection;
   function setup(){
-    logMsgElement = document.getElementById("logMsg");
+//    logMsgElement = document.getElementById("logMsg");
     doLog("new connection");
     connection = new WebSocket('ws://199.64.70.126:12345');
+    //connection = new WebSocket('ws://127.0.0.1:12345');
     // When the connection is open, send some data to the server
     connection.onopen = function () {
       doLog("onopen");
       connection.send('Ping'); // Send the message 'Ping' to the server
     };
-    
+
     // Log errors
     connection.onerror = function (error) {
       doLog("websocket error "+ error);
     };
-    
+
     // Log messages from the server
     connection.onmessage = function (e) {
       doLog("server: " + e.data);
     };
   }
-  
+
   function sendMsg(){
     // Sending String
     inText=document.getElementById("inText").value;
     doLog("send: "+inText);
     connection.send(inText);
   }
-  
+
   function doLog(msg){
     console.log(msg);
-    logMsgElement.innerHtml += "<br>\r\n" + msg;
+    var logMsgElement = document.getElementById("logMsg");
+    document.getElementById("logMsg").innerHTML += "<br>\r\n" + msg;
   }
 </script>
 </head>
@@ -44,11 +46,10 @@
 <body onload="setup();">
 
 <input type="text" id="inText" name="inText"><br>
-<input type="button" value="Open Reader" id="sendButton" onclick="sendMsg()" />
+<input type="button" value="Open Reader" id="sendButton" onclick="sendMsg()">
 
     <div><b>Log:</b></div>
-      <div id="logMsg">
-    </div>
+      <div id="logMsg"></div>
 
 </body>
 </html>
