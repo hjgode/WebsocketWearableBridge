@@ -43,7 +43,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        checkPermissions();
 
+        //handles messages received by websocket server client
         m_handler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -163,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+    //handles messages by websocket server
     @SuppressWarnings("UnusedDeclaration")
     public void onEvent(SocketMessageEvent event) {
         String message=event.getMessage();

@@ -18,6 +18,7 @@ public class Constants {
     public static final int REQUEST_BTADMIN = 113;
     public static final int REQUEST_BT = 114;
     public static final int REQUEST_LOCATION = 115;
+    public static final int REQUEST_RECEIVE_BOOT_COMPLETED=116;
 
     // Constants that indicate the current connection state
     public static final int STATE_NONE = 0;       // we're doing nothing
@@ -27,4 +28,6 @@ public class Constants {
 
     public static final String BT_CONNECT_MAC = "BTCONNECT";
     public static final String BT_DISCONNECT ="BTDISCONNECT";
+
+    public static final String START_ON_BOOT = "START_ON_BOOT";
 }

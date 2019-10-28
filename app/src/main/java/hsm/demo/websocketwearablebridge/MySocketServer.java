@@ -9,8 +9,13 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
+import java.util.Enumeration;
 
 import android.os.Handler;
 
@@ -108,6 +113,8 @@ public class MySocketServer extends WebSocketServer {
 
     BluetoothAdapter mBluetoothAdapter=null;
     BluetoothDevice device=null;
+
+    //handles control messages from base websocket class
     @SuppressWarnings("UnusedDeclaration")
     public void onEvent(SocketControlEvent event) {
         String message=event.getMessage();
