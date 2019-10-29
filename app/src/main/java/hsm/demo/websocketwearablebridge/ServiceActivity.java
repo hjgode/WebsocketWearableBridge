@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,34 +15,49 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import org.json.JSONObject;
 
 import de.greenrobot.event.EventBus;
 
 public class ServiceActivity extends AppCompatActivity {
 
     Button btnStartService, btnStopService;
+    Switch switchStartServiceOnBoot;
     TextView logText;
     final static String TAG="MyServiceActivity";
     Context m_context=this;
+    Boolean bStartOnBoot=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service);
 
-        Boolean bStartOnBoot;
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if(extras == null) {
-                bStartOnBoot = false;
-            } else {
-                bStartOnBoot = extras.getBoolean(Constants.START_ON_BOOT, false);
-            }
-        } else {
-            bStartOnBoot = (Boolean) savedInstanceState.getSerializable(Constants.START_ON_BOOT);
-        }
+        checkPermissions();
+
+        //grab prefs
+        final SharedPreferences examplePrefs = getSharedPreferences(Constants.PREFS,0);
+        final SharedPreferences.Editor editor = examplePrefs.edit();
+
+        switchStartServiceOnBoot=findViewById(R.id.switchStartServiceOnBoot);
+        switchStartServiceOnBoot.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                bStartOnBoot=b;
+                //commit prefs on change
+                editor.putBoolean(Constants.START_ON_BOOT, bStartOnBoot);
+                editor.commit();            }
+        });
+
+
+        bStartOnBoot = examplePrefs.getBoolean(Constants.START_ON_BOOT, true);
+
+        switchStartServiceOnBoot.setChecked(bStartOnBoot);
 
         logText=findViewById(R.id.logText);
         logText.setMovementMethod(new ScrollingMovementMethod());
@@ -76,19 +92,20 @@ public class ServiceActivity extends AppCompatActivity {
             }, 5000);
         }
 
-        checkPermissions();
 
     }
 
     @Override
     protected void onStop(){
+        Log.d(TAG, "onStop");
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
     public void startService() {
+        stopService();
         Intent serviceIntent = new Intent(this, MyWebSocketService.class);
-        serviceIntent.putExtra("inputExtra", "Foreground Service Example in Android");
+        serviceIntent.putExtra("inputExtra", "Foreground MyWebSocketService");
 
         ContextCompat.startForegroundService(this, serviceIntent);
     }
@@ -106,6 +123,12 @@ public class ServiceActivity extends AppCompatActivity {
         logText.append(TAG + " on SocketServiceEvent: " + message);
         //mServer.sendMessage("echo: " + message);
     }
+    @SuppressWarnings("UnusedDeclaration")
+    public void onEvent(MyMessageEvent  event) {
+        JSONObject jsonObject =event.getMessage();
+        Log.d(TAG, "on MyMessageEvent: " + event.toString());
+        logText.append(TAG + " on SocketServiceEvent: " + event.toString());
+    }
 
     public static boolean hasPermissions(Context context, String... permissions) {
         if (context != null && permissions != null) {
@@ -117,6 +140,7 @@ public class ServiceActivity extends AppCompatActivity {
         }
         return true;
     }
+
     void checkPermissions(){
         // The request code used in ActivityCompat.requestPermissions()
         // and returned in the Activity's onRequestPermissionsResult()

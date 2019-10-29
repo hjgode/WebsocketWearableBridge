@@ -8,6 +8,7 @@ import android.util.Log;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+import org.json.JSONObject;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -87,7 +88,8 @@ public class MySocketServer extends WebSocketServer {
 
     @Override
     public void onError(WebSocket conn, Exception ex) {
-        Log.d(TAG, "MySocketServer onError");
+
+        Log.d(TAG, "MySocketServer onError: "+ex.getMessage());
     }
 
     public void sendMessage(String message) {
@@ -131,5 +133,10 @@ public class MySocketServer extends WebSocketServer {
             btScannerService.connect(device);
             Log.d(TAG, "scanner service state="+btScannerService.getState());
         }
+    }
+    @SuppressWarnings("UnusedDeclaration")
+    public void onEvent(MyMessageEvent  event) {
+        JSONObject jsonObject =event.getMessage();
+        Log.d(TAG, "on MyMessageEvent: " + event.toString());
     }
 }

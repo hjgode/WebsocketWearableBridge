@@ -1,6 +1,8 @@
 package hsm.demo.websocketwearablebridge;
 
 public class Constants {
+    public static final String PREFS = "websocketwearablebridge_PREFS";
+
     // Message types sent from the BluetoothChatService Handler
     public static final int MESSAGE_STATE_CHANGE = 1;
     public static final int MESSAGE_READ = 2;

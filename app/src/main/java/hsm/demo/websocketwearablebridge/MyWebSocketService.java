@@ -17,6 +17,9 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -109,11 +112,28 @@ public class MyWebSocketService extends Service {
     }
 
     private void startServer() {
-        InetAddress inetAddress = getInetAddress();
-        addLog("local IP="+inetAddress.toString());
+        //block until we have an IP address
+        Runnable runnable=new Runnable() {
+            @Override
+            public void run() {
+                InetAddress inetAddress1;
+                do{
+                    inetAddress1 = getInetAddress();
+                    try {
+                        Thread.sleep(1000);
+                    }catch(InterruptedException e){
+                        Log.d(TAG, "startServer getInetAddress interrupted");
+                    }
+                }while (inetAddress1==null);
+            }
+        };
+        runnable.run(); //block until valid IP
+        final InetAddress inetAddress=getInetAddress();
         if (inetAddress == null) {
             Log.e(TAG, "Unable to lookup IP address");
             return;
+        }else{
+            addLog("local IP="+inetAddress.toString());
         }
 
         EventBus.getDefault().post(new SocketServiceEvent ("WebSocketServer starting..."));
@@ -124,6 +144,13 @@ public class MyWebSocketService extends Service {
 
     @Override
     public void onDestroy() {
+        if(mServer.btScannerService!=null)
+            mServer.btScannerService.stop();
+        try {
+            mServer.stop();
+        }
+        catch (InterruptedException e){}
+        catch (IOException e){}
         EventBus.getDefault().post(new SocketServiceEvent ("WebSocketServerService onDestroy"));
         super.onDestroy();
         EventBus.getDefault().unregister(this);
@@ -179,5 +206,10 @@ public class MyWebSocketService extends Service {
         String message=event.getMessage();
         Log.d(TAG, "on SocketControlEvent: " + message);
         //mServer.sendMessage("echo: " + message);
+    }
+    @SuppressWarnings("UnusedDeclaration")
+    public void onEvent(MyMessageEvent  event) {
+        JSONObject jsonObject =event.getMessage();
+        Log.d(TAG, "on MyMessageEvent: " + event.toString());
     }
 }
