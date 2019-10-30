@@ -212,10 +212,11 @@ public class MyWebSocketService extends Service {
         String message=event.getMessage();
         Log.d(TAG, "on SocketControlEvent: " + message);
         //mServer.sendMessage("echo: " + message);
+        EventBus.getDefault().post(new MyMessage(MyMessage.eType.infoType, MyMessage.eSource.srcWebsocketServer, event.getMessage(),null));
     }
     @SuppressWarnings("UnusedDeclaration")
-    public void onEvent(MyMessageEvent  event) {
-        JSONObject jsonObject =event.getMessage();
-        Log.d(TAG, "on MyMessageEvent: " + event.toString());
+    public void onEvent(MyMessage  mMsg) {
+        JSONObject jsonObject =mMsg.getJsonObject();
+        Log.d(TAG, "on MyMessageEvent: " + mMsg.toString());
     }
 }

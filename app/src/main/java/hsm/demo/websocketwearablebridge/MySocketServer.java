@@ -82,7 +82,8 @@ public class MySocketServer extends WebSocketServer {
             }
         }
         else{
-            EventBus.getDefault().post(new SocketMessageEvent(message));
+            //EventBus.getDefault().post(new SocketMessageEvent(message));
+            EventBus.getDefault().post((new MyMessage(MyMessage.eType.infoType, MyMessage.eSource.srcWebsocketClient, message, null)));
         }
     }
 
@@ -134,9 +135,11 @@ public class MySocketServer extends WebSocketServer {
             Log.d(TAG, "scanner service state="+btScannerService.getState());
         }
     }
+
+
     @SuppressWarnings("UnusedDeclaration")
-    public void onEvent(MyMessageEvent  event) {
-        JSONObject jsonObject =event.getMessage();
-        Log.d(TAG, "on MyMessageEvent: " + event.toString());
+    public void onEvent(MyMessage  mMsg) {
+        JSONObject jsonObject =mMsg.getJsonObject();
+        Log.d(TAG, "on MyMessageEvent: " + mMsg.toString());
     }
 }

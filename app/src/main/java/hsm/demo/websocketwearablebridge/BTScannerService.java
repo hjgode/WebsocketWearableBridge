@@ -290,7 +290,7 @@ public class BTScannerService {
                 }
                 // Start the service over to restart listening mode
                 BTScannerService.this.start();
-                Log.d(TAG, "Restart in listening mode");
+                Log.d(TAG, "Restart to Connected mode");
                 return;
             }
             // Reset the ConnectThread because we're done
@@ -389,8 +389,8 @@ public class BTScannerService {
     }
     //handles control messages from base websocket class
     @SuppressWarnings("UnusedDeclaration")
-    public void onEvent(MyMessageEvent event) {
-        String message=event.toString();
+    public void onEvent(MyMessage mMsg) {
+        String message=mMsg.toString();
         Log.d(TAG, "onEvent MyMessageEvent: " + message);
         //sendMessage(message);
 /*
@@ -409,9 +409,10 @@ public class BTScannerService {
     }
 
     void postMessage(String sData){
-        EventBus.getDefault().post(new MyMessage(MyMessage.eType.stateType, MyMessage.eSource.srcBTService, sData, null));
+        MyMessage mMsg=MyMessage.newInfoMessage(sData, MyMessage.eSource.srcBTService);
+        EventBus.getDefault().post(mMsg);
     }
-    void postMessage(MyMessage msg){
-        EventBus.getDefault().post(msg);
+    void postMessage(MyMessage mMsg){
+        EventBus.getDefault().post(mMsg);
     }
 }

@@ -20,6 +20,7 @@ public class MyMessage {
         srcBTService,
         srcService,
         srcBTdevice,
+        srcWebsocketClient/**/
     }
     static class eMessageType{
         final static String unknownType="unknownType";
@@ -62,6 +63,11 @@ public class MyMessage {
         sData=s;
         oData=o;
     }
+
+    public static MyMessage newInfoMessage(String sInfo, eSource eSrc){
+        MyMessage mmsg=new MyMessage(eType.infoType, eSrc, sInfo, null);
+        return mmsg;
+    }
     public JSONObject getJsonObject(){
         jsonObject=new JSONObject();
         try {
@@ -72,7 +78,8 @@ public class MyMessage {
         }catch (Exception e){}
         return jsonObject;
     }
-    public String getString(){
+    @Override
+    public String toString(){
         StringBuilder sb=new StringBuilder();
         sb.append("Type: " + messageType);
         sb.append(", Source: " + messageSource);

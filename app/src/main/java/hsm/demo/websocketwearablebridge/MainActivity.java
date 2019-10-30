@@ -165,10 +165,21 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+/*
     //handles messages by websocket server
     @SuppressWarnings("UnusedDeclaration")
     public void onEvent(SocketMessageEvent event) {
         String message=event.getMessage();
+        Log.d(TAG, "onEvent");
+        mServer.sendMessage("echo: " + message);
+        addLog(message);
+    }
+ */
+
+    //handles messages by websocket server, BTCONNECT and BTSEND already filtered in BTScannerService
+    @SuppressWarnings("UnusedDeclaration")
+    public void onEvent(MyMessage mMsg) {
+        String message=mMsg.toString();
         Log.d(TAG, "onEvent");
         mServer.sendMessage("echo: " + message);
         addLog(message);

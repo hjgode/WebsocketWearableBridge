@@ -124,10 +124,10 @@ public class ServiceActivity extends AppCompatActivity {
         //mServer.sendMessage("echo: " + message);
     }
     @SuppressWarnings("UnusedDeclaration")
-    public void onEvent(MyMessageEvent  event) {
-        JSONObject jsonObject =event.getMessage();
-        Log.d(TAG, "on MyMessageEvent: " + event.toString());
-        logText.append(TAG + " on SocketServiceEvent: " + event.toString());
+    public void onEvent(MyMessage  mMsg) {
+        JSONObject jsonObject =mMsg.getJsonObject();
+        Log.d(TAG, "on MyMessageEvent: " + mMsg.toString());
+        logText.append(TAG + " on SocketServiceEvent: " + mMsg.toString());
     }
 
     public static boolean hasPermissions(Context context, String... permissions) {

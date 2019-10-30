@@ -1,0 +1,139 @@
+2019-10-30 14:13:43.182 12587-12587/hsm.demo.websocketwearablebridge D/MyServiceActivity: onRequestPermissionsResult: [Ljava.lang.String;@e1a442b, [I@6365088
+2019-10-30 14:13:43.182 12587-12587/hsm.demo.websocketwearablebridge D/MyServiceActivity: Permission: android.permission.WRITE_EXTERNAL_STORAGE not granted
+2019-10-30 14:13:43.182 12587-12587/hsm.demo.websocketwearablebridge D/MyServiceActivity: Permission: android.permission.BLUETOOTH granted
+2019-10-30 14:13:43.182 12587-12587/hsm.demo.websocketwearablebridge D/MyServiceActivity: Permission: android.permission.BLUETOOTH_ADMIN granted
+2019-10-30 14:13:43.182 12587-12587/hsm.demo.websocketwearablebridge D/MyServiceActivity: Permission: android.permission.ACCESS_COARSE_LOCATION not granted
+2019-10-30 14:13:43.182 12587-12587/hsm.demo.websocketwearablebridge D/MyServiceActivity: Permission: android.permission.RECEIVE_BOOT_COMPLETED granted
+2019-10-30 14:13:47.997 12587-12587/hsm.demo.websocketwearablebridge D/MyServiceActivity: on SocketServiceEvent: Service onCreate() done
+2019-10-30 14:13:48.035 12587-12587/hsm.demo.websocketwearablebridge D/MyServiceActivity: on SocketServiceEvent: Service onStartCommand(): Intent { cmp=hsm.demo.websocketwearablebridge/.MyWebSocketService (has extras) }, start ID=1
+2019-10-30 14:13:48.041 12587-12587/hsm.demo.websocketwearablebridge D/MyServiceActivity: on SocketServiceEvent: WebSocketServerService createNotificationChannel()
+2019-10-30 14:13:48.057 12587-12587/hsm.demo.websocketwearablebridge D/MyServiceActivity: on SocketServiceEvent: Service startForeground
+2019-10-30 14:13:49.067 12587-12587/hsm.demo.websocketwearablebridge D/MyWebSocketService: local IP=/127.0.0.1
+2019-10-30 14:13:49.068 12587-12587/hsm.demo.websocketwearablebridge D/MyServiceActivity: on SocketServiceEvent: WebSocketServerService: local IP=/127.0.0.1
+2019-10-30 14:13:49.086 12587-12587/hsm.demo.websocketwearablebridge D/MyServiceActivity: on SocketServiceEvent: WebSocketServer starting...
+2019-10-30 14:13:49.113 12587-12587/hsm.demo.websocketwearablebridge D/MySocketServer: MySocketServer Started
+2019-10-30 14:13:49.123 12587-12587/hsm.demo.websocketwearablebridge D/MyServiceActivity: on SocketServiceEvent: WebSocketServer started.
+2019-10-30 14:14:03.621 12587-12587/hsm.demo.websocketwearablebridge D/MyServiceActivity: onStop
+2019-10-30 14:14:06.380 12587-12674/hsm.demo.websocketwearablebridge D/MySocketServer: MySocketServer onOpen
+2019-10-30 14:14:06.390 12587-12674/hsm.demo.websocketwearablebridge D/MySocketServer: MySocketServer onMessage: Ping
+2019-10-30 14:14:21.450 12587-12674/hsm.demo.websocketwearablebridge D/MySocketServer: MySocketServer onMessage: BTCONNECTC0:EE:40:41:51:B7
+2019-10-30 14:14:21.462 12587-12674/hsm.demo.websocketwearablebridge D/MyBluetoothService: connect to: C0:EE:40:41:51:B7
+2019-10-30 14:14:21.470 12587-12674/hsm.demo.websocketwearablebridge D/MyBluetoothService: setState() 0 -> 2
+2019-10-30 14:14:21.471 12587-12710/hsm.demo.websocketwearablebridge I/MyBluetoothService: BEGIN mConnectThread
+2019-10-30 14:14:21.473 12587-12674/hsm.demo.websocketwearablebridge D/MyWebSocketService: on MyMessageEvent: Type: infoType, Source: srcBTService, Data: 2
+2019-10-30 14:14:21.474 12587-12674/hsm.demo.websocketwearablebridge D/MySocketServer: on MyMessageEvent: Type: infoType, Source: srcBTService, Data: 2
+2019-10-30 14:14:21.475 12587-12674/hsm.demo.websocketwearablebridge D/MyBluetoothService: onEvent MyMessageEvent: Type: infoType, Source: srcBTService, Data: 2
+2019-10-30 14:14:21.475 12587-12674/hsm.demo.websocketwearablebridge D/MySocketServer: scanner service state=2
+2019-10-30 14:14:21.479 12587-12587/hsm.demo.websocketwearablebridge D/MyWebSocketService: { when=-1ms what=1 arg1=2 arg2=-1 target=hsm.demo.websocketwearablebridge.MyWebSocketService$1 }
+2019-10-30 14:14:26.625 12587-12710/hsm.demo.websocketwearablebridge D/MyBluetoothService: SOCKET connect FAILED: read failed, socket might closed or timeout, read ret: -1
+2019-10-30 14:14:26.626 12587-12710/hsm.demo.websocketwearablebridge D/MyBluetoothService: setState() 2 -> 1
+2019-10-30 14:14:26.626 12587-12587/hsm.demo.websocketwearablebridge D/MyWebSocketService: { when=-1ms what=1 arg1=1 arg2=-1 target=hsm.demo.websocketwearablebridge.MyWebSocketService$1 }
+2019-10-30 14:14:26.627 12587-12710/hsm.demo.websocketwearablebridge D/MyWebSocketService: on MyMessageEvent: Type: infoType, Source: srcBTService, Data: 1
+2019-10-30 14:14:26.627 12587-12710/hsm.demo.websocketwearablebridge D/MySocketServer: on MyMessageEvent: Type: infoType, Source: srcBTService, Data: 1
+2019-10-30 14:14:26.627 12587-12710/hsm.demo.websocketwearablebridge D/MyBluetoothService: onEvent MyMessageEvent: Type: infoType, Source: srcBTService, Data: 1
+2019-10-30 14:14:26.628 12587-12587/hsm.demo.websocketwearablebridge D/MyWebSocketService: { when=-1ms what=5 target=hsm.demo.websocketwearablebridge.MyWebSocketService$1 }
+2019-10-30 14:14:26.630 12587-12710/hsm.demo.websocketwearablebridge D/MyBluetoothService: start
+2019-10-30 14:14:26.630 12587-12710/hsm.demo.websocketwearablebridge D/MyBluetoothService: setState() 1 -> 3
+2019-10-30 14:14:26.631 12587-12710/hsm.demo.websocketwearablebridge D/MyWebSocketService: on MyMessageEvent: Type: infoType, Source: srcBTService, Data: 3
+2019-10-30 14:14:26.631 12587-12587/hsm.demo.websocketwearablebridge D/MyWebSocketService: { when=-1ms what=1 arg1=3 arg2=-1 target=hsm.demo.websocketwearablebridge.MyWebSocketService$1 }
+2019-10-30 14:14:26.631 12587-12710/hsm.demo.websocketwearablebridge D/MySocketServer: on MyMessageEvent: Type: infoType, Source: srcBTService, Data: 3
+2019-10-30 14:14:26.632 12587-12710/hsm.demo.websocketwearablebridge D/MyBluetoothService: onEvent MyMessageEvent: Type: infoType, Source: srcBTService, Data: 3
+2019-10-30 14:14:26.632 12587-12710/hsm.demo.websocketwearablebridge D/MyBluetoothService: Restart in listening mode
+2019-10-30 14:18:22.688 12587-12674/hsm.demo.websocketwearablebridge D/MySocketServer: MySocketServer onMessage: BTDISCONNECT
+2019-10-30 14:18:22.689 12587-12674/hsm.demo.websocketwearablebridge D/MyBluetoothService: stop
+2019-10-30 14:18:22.689 12587-12674/hsm.demo.websocketwearablebridge D/MyBluetoothService: setState() 3 -> 0
+2019-10-30 14:18:22.690 12587-12587/hsm.demo.websocketwearablebridge D/MyWebSocketService: { when=0 what=1 arg2=-1 target=hsm.demo.websocketwearablebridge.MyWebSocketService$1 }
+2019-10-30 14:18:22.690 12587-12674/hsm.demo.websocketwearablebridge D/MyWebSocketService: on MyMessageEvent: Type: infoType, Source: srcBTService, Data: 0
+2019-10-30 14:18:22.690 12587-12674/hsm.demo.websocketwearablebridge D/MySocketServer: on MyMessageEvent: Type: infoType, Source: srcBTService, Data: 0
+2019-10-30 14:18:22.690 12587-12674/hsm.demo.websocketwearablebridge D/MyBluetoothService: onEvent MyMessageEvent: Type: infoType, Source: srcBTService, Data: 0
+2019-10-30 15:09:13.511 1786-2264/? W/ActivityManager: Scheduling restart of crashed service hsm.demo.websocketwearablebridge/.MyWebSocketService in 1000ms
+2019-10-30 15:13:58.079 13801-13809/? W/MessageQueue: Handler (android.os.Handler) {4a330c4} sending message to a Handler on a dead thread
+    java.lang.IllegalStateException: Handler (android.os.Handler) {4a330c4} sending message to a Handler on a dead thread
+        at android.os.MessageQueue.enqueueMessage(MessageQueue.java:545)
+        at android.os.Handler.enqueueMessage(Handler.java:662)
+        at android.os.Handler.sendMessageAtTime(Handler.java:631)
+        at android.os.Handler.sendMessageDelayed(Handler.java:601)
+        at android.os.Handler.post(Handler.java:357)
+        at android.os.ResultReceiver$MyResultReceiver.send(ResultReceiver.java:57)
+        at com.android.internal.os.IResultReceiver$Stub.onTransact(IResultReceiver.java:58)
+        at android.os.Binder.execTransact(Binder.java:697)
+2019-10-30 15:13:58.444 13812-13820/? W/MessageQueue: Handler (android.os.Handler) {745cb2d} sending message to a Handler on a dead thread
+    java.lang.IllegalStateException: Handler (android.os.Handler) {745cb2d} sending message to a Handler on a dead thread
+        at android.os.MessageQueue.enqueueMessage(MessageQueue.java:545)
+        at android.os.Handler.enqueueMessage(Handler.java:662)
+        at android.os.Handler.sendMessageAtTime(Handler.java:631)
+        at android.os.Handler.sendMessageDelayed(Handler.java:601)
+        at android.os.Handler.post(Handler.java:357)
+        at android.os.ResultReceiver$MyResultReceiver.send(ResultReceiver.java:57)
+        at com.android.internal.os.IResultReceiver$Stub.onTransact(IResultReceiver.java:58)
+        at android.os.Binder.execTransact(Binder.java:697)
+2019-10-30 15:14:01.132 13777-13777/hsm.demo.websocketwearablebridge D/MyServiceActivity: onCreate
+2019-10-30 15:14:01.545 13777-13777/hsm.demo.websocketwearablebridge D/MyServiceActivity: onRequestPermissionsResult: [Ljava.lang.String;@4668a5, [I@67b047a
+2019-10-30 15:14:01.545 13777-13777/hsm.demo.websocketwearablebridge D/MyServiceActivity: Permission: android.permission.WRITE_EXTERNAL_STORAGE not granted
+2019-10-30 15:14:01.545 13777-13777/hsm.demo.websocketwearablebridge D/MyServiceActivity: Permission: android.permission.BLUETOOTH granted
+2019-10-30 15:14:01.545 13777-13777/hsm.demo.websocketwearablebridge D/MyServiceActivity: Permission: android.permission.BLUETOOTH_ADMIN granted
+2019-10-30 15:14:01.546 13777-13777/hsm.demo.websocketwearablebridge D/MyServiceActivity: Permission: android.permission.ACCESS_COARSE_LOCATION not granted
+2019-10-30 15:14:01.546 13777-13777/hsm.demo.websocketwearablebridge D/MyServiceActivity: Permission: android.permission.RECEIVE_BOOT_COMPLETED granted
+2019-10-30 15:14:06.347 13777-13777/hsm.demo.websocketwearablebridge D/MyServiceActivity: on SocketServiceEvent: Service onCreate() done
+2019-10-30 15:14:06.378 13777-13777/hsm.demo.websocketwearablebridge D/MyServiceActivity: on SocketServiceEvent: Service onStartCommand(): Intent { cmp=hsm.demo.websocketwearablebridge/.MyWebSocketService (has extras) }, start ID=1
+2019-10-30 15:14:06.383 13777-13777/hsm.demo.websocketwearablebridge D/MyServiceActivity: on SocketServiceEvent: WebSocketServerService createNotificationChannel()
+2019-10-30 15:14:06.397 13777-13777/hsm.demo.websocketwearablebridge D/MyServiceActivity: on SocketServiceEvent: Service startForeground
+2019-10-30 15:14:07.407 13777-13777/hsm.demo.websocketwearablebridge D/MyWebSocketService: local IP=/127.0.0.1
+2019-10-30 15:14:07.407 13777-13777/hsm.demo.websocketwearablebridge D/MyServiceActivity: on SocketServiceEvent: WebSocketServerService: local IP=/127.0.0.1
+2019-10-30 15:14:07.420 13777-13777/hsm.demo.websocketwearablebridge D/MyServiceActivity: on SocketServiceEvent: WebSocketServer starting...
+2019-10-30 15:14:07.442 13777-13777/hsm.demo.websocketwearablebridge D/MySocketServer: MySocketServer Started
+2019-10-30 15:14:07.448 13777-13777/hsm.demo.websocketwearablebridge D/MyServiceActivity: on SocketServiceEvent: WebSocketServer started.
+2019-10-30 15:14:13.008 13777-13777/hsm.demo.websocketwearablebridge D/MyServiceActivity: onStop
+2019-10-30 15:14:15.664 13777-13860/hsm.demo.websocketwearablebridge D/MySocketServer: MySocketServer onOpen
+2019-10-30 15:14:15.673 13777-13860/hsm.demo.websocketwearablebridge D/MySocketServer: MySocketServer onMessage: Ping
+2019-10-30 15:14:15.679 13777-13860/hsm.demo.websocketwearablebridge D/MyWebSocketService: on MyMessageEvent: Type: infoType, Source: srcWebsocketClient, Data: Ping
+2019-10-30 15:14:15.680 13777-13860/hsm.demo.websocketwearablebridge D/MySocketServer: on MyMessageEvent: Type: infoType, Source: srcWebsocketClient, Data: Ping
+2019-10-30 15:15:04.165 13777-13860/hsm.demo.websocketwearablebridge D/MySocketServer: MySocketServer onMessage: BTCONNECTC0:EE:40:41:51:B7
+2019-10-30 15:15:04.173 13777-13860/hsm.demo.websocketwearablebridge D/MyBluetoothService: connect to: C0:EE:40:41:51:B7
+2019-10-30 15:15:04.178 13777-13860/hsm.demo.websocketwearablebridge D/MyBluetoothService: setState() 0 -> 2
+2019-10-30 15:15:04.178 13777-13905/hsm.demo.websocketwearablebridge I/MyBluetoothService: BEGIN mConnectThread
+2019-10-30 15:15:04.178 13777-13860/hsm.demo.websocketwearablebridge D/MyWebSocketService: on MyMessageEvent: Type: infoType, Source: srcBTService, Data: 2
+2019-10-30 15:15:04.179 13777-13860/hsm.demo.websocketwearablebridge D/MySocketServer: on MyMessageEvent: Type: infoType, Source: srcBTService, Data: 2
+2019-10-30 15:15:04.179 13777-13860/hsm.demo.websocketwearablebridge D/MyBluetoothService: onEvent MyMessageEvent: Type: infoType, Source: srcBTService, Data: 2
+2019-10-30 15:15:04.179 13777-13860/hsm.demo.websocketwearablebridge D/MySocketServer: scanner service state=2
+2019-10-30 15:15:04.181 13777-13777/hsm.demo.websocketwearablebridge D/MyWebSocketService: { when=0 what=1 arg1=2 arg2=-1 target=hsm.demo.websocketwearablebridge.MyWebSocketService$1 }
+2019-10-30 15:15:05.789 13777-13905/hsm.demo.websocketwearablebridge D/MyBluetoothService: SOCKET connected
+2019-10-30 15:15:05.789 13777-13905/hsm.demo.websocketwearablebridge D/MyBluetoothService: connected
+2019-10-30 15:15:05.789 13777-13905/hsm.demo.websocketwearablebridge D/MyBluetoothService: create ConnectedThread
+2019-10-30 15:15:05.791 13777-13905/hsm.demo.websocketwearablebridge D/MyBluetoothService: in/out streams assigned
+2019-10-30 15:15:05.794 13777-13914/hsm.demo.websocketwearablebridge I/MyBluetoothService: BEGIN mConnectedThread
+2019-10-30 15:15:05.796 13777-13777/hsm.demo.websocketwearablebridge D/MyWebSocketService: { when=-1ms what=4 target=hsm.demo.websocketwearablebridge.MyWebSocketService$1 }
+2019-10-30 15:15:05.797 13777-13777/hsm.demo.websocketwearablebridge D/MyWebSocketService: connected to Wearable_8680i_SN_18355B47BB
+2019-10-30 15:15:05.799 13777-13777/hsm.demo.websocketwearablebridge D/MySocketServer: MySocketServer sendMessage: MBEPEXE1.
+2019-10-30 15:15:05.805 13777-13905/hsm.demo.websocketwearablebridge D/MyWebSocketService: on MyMessageEvent: Type: infoType, Source: srcBTService, Data: connected to Wearable_8680i_SN_18355B47BB
+2019-10-30 15:15:05.805 13777-13905/hsm.demo.websocketwearablebridge D/MySocketServer: on MyMessageEvent: Type: infoType, Source: srcBTService, Data: connected to Wearable_8680i_SN_18355B47BB
+2019-10-30 15:15:05.805 13777-13905/hsm.demo.websocketwearablebridge D/MyBluetoothService: onEvent MyMessageEvent: Type: infoType, Source: srcBTService, Data: connected to Wearable_8680i_SN_18355B47BB
+2019-10-30 15:15:05.805 13777-13905/hsm.demo.websocketwearablebridge D/MyBluetoothService: setState() 2 -> 3
+2019-10-30 15:15:05.806 13777-13777/hsm.demo.websocketwearablebridge D/MyWebSocketService: { when=0 what=1 arg1=3 arg2=-1 target=hsm.demo.websocketwearablebridge.MyWebSocketService$1 }
+2019-10-30 15:15:05.806 13777-13905/hsm.demo.websocketwearablebridge D/MyWebSocketService: on MyMessageEvent: Type: infoType, Source: srcBTService, Data: 3
+2019-10-30 15:15:05.806 13777-13905/hsm.demo.websocketwearablebridge D/MySocketServer: on MyMessageEvent: Type: infoType, Source: srcBTService, Data: 3
+2019-10-30 15:15:05.806 13777-13905/hsm.demo.websocketwearablebridge D/MyBluetoothService: onEvent MyMessageEvent: Type: infoType, Source: srcBTService, Data: 3
+2019-10-30 15:15:05.806 13777-13905/hsm.demo.websocketwearablebridge D/MyBluetoothService: Start the connected thread
+2019-10-30 15:15:42.921 13777-13777/hsm.demo.websocketwearablebridge D/MyWebSocketService: { when=0 what=2 target=hsm.demo.websocketwearablebridge.MyWebSocketService$1 }
+2019-10-30 15:15:42.921 13777-13914/hsm.demo.websocketwearablebridge D/MyBluetoothService: bt recv: w0104150005717482172002001050729<d>
+2019-10-30 15:15:42.924 13777-13777/hsm.demo.websocketwearablebridge D/MySocketServer: MySocketServer sendMessage: SCAN_DATAw0104150005717482172002001050729
+2019-10-30 15:15:49.285 13777-13860/hsm.demo.websocketwearablebridge D/MySocketServer: MySocketServer onMessage: BTDISCONNECT
+2019-10-30 15:15:49.285 13777-13860/hsm.demo.websocketwearablebridge D/MyBluetoothService: stop
+2019-10-30 15:15:49.288 13777-13860/hsm.demo.websocketwearablebridge D/MyBluetoothService: setState() 3 -> 0
+2019-10-30 15:15:49.289 13777-13777/hsm.demo.websocketwearablebridge D/MyWebSocketService: { when=0 what=1 arg2=-1 target=hsm.demo.websocketwearablebridge.MyWebSocketService$1 }
+2019-10-30 15:15:49.290 13777-13860/hsm.demo.websocketwearablebridge D/MyWebSocketService: on MyMessageEvent: Type: infoType, Source: srcBTService, Data: 0
+2019-10-30 15:15:49.293 13777-13860/hsm.demo.websocketwearablebridge D/MySocketServer: on MyMessageEvent: Type: infoType, Source: srcBTService, Data: 0
+2019-10-30 15:15:49.294 13777-13860/hsm.demo.websocketwearablebridge D/MyBluetoothService: onEvent MyMessageEvent: Type: infoType, Source: srcBTService, Data: 0
+2019-10-30 15:15:49.294 13777-13914/hsm.demo.websocketwearablebridge E/MyBluetoothService: disconnected
+    java.io.IOException: bt socket closed, read return: -1
+        at android.bluetooth.BluetoothSocket.read(BluetoothSocket.java:524)
+        at android.bluetooth.BluetoothInputStream.read(BluetoothInputStream.java:96)
+        at java.io.InputStream.read(InputStream.java:101)
+        at hsm.demo.websocketwearablebridge.BTScannerService$ConnectedThread.run(BTScannerService.java:344)
+2019-10-30 15:15:49.296 13777-13914/hsm.demo.websocketwearablebridge D/MyBluetoothService: setState() 0 -> 1
+2019-10-30 15:15:49.297 13777-13777/hsm.demo.websocketwearablebridge D/MyWebSocketService: { when=0 what=1 arg1=1 arg2=-1 target=hsm.demo.websocketwearablebridge.MyWebSocketService$1 }
+2019-10-30 15:15:49.297 13777-13914/hsm.demo.websocketwearablebridge D/MyWebSocketService: on MyMessageEvent: Type: infoType, Source: srcBTService, Data: 1
+2019-10-30 15:15:49.298 13777-13914/hsm.demo.websocketwearablebridge D/MySocketServer: on MyMessageEvent: Type: infoType, Source: srcBTService, Data: 1
+2019-10-30 15:15:49.298 13777-13914/hsm.demo.websocketwearablebridge D/MyBluetoothService: onEvent MyMessageEvent: Type: infoType, Source: srcBTService, Data: 1
+2019-10-30 15:15:49.300 13777-13777/hsm.demo.websocketwearablebridge D/MyWebSocketService: { when=0 what=5 target=hsm.demo.websocketwearablebridge.MyWebSocketService$1 }
+2019-10-30 15:16:20.175 1786-2791/? W/ActivityManager: Scheduling restart of crashed service hsm.demo.websocketwearablebridge/.MyWebSocketService in 1000ms
