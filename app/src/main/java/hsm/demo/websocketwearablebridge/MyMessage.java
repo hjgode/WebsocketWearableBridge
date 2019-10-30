@@ -29,7 +29,7 @@ public class MyMessage {
         final static String cmdType="cmdType";
     }
     static class eMessageSource{
-        final static String srcUnknown="srcBTSocket";
+        final static String srcUnknown="srcUnknown";
         final static String srcWebsocketServer="srcWebsocketServer";
         final static String srcBTSocket="srcBTSocket";
         final static String srcService="srcService";
