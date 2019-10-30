@@ -177,6 +177,10 @@ public class MyWebSocketService extends Service {
         }
     }
     private static InetAddress getInetAddress() {
+        try{
+        InetAddress localHost= InetAddress.getByAddress(new byte[]{127,0,0,1});// getLoopbackAddress();// ByAddress(new byte[]{127,0,0,1});
+        return  localHost;}catch (Exception e){}
+/*
         try {
             for (Enumeration en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
                 NetworkInterface networkInterface = (NetworkInterface) en.nextElement();
@@ -193,8 +197,10 @@ public class MyWebSocketService extends Service {
             e.printStackTrace();
             Log.e(TAG, "Error getting the network interface information");
         }
-
+ */
         return null;
+
+
     }
     void addLog(String m){
         Log.d(TAG, m);

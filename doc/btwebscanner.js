@@ -14,7 +14,7 @@ class BTWebScanner{
     constructor(onOpenCallback, onRecvCallback){
         //start web service connection
         doLog("new connection");
-        connection = new WebSocket('ws://199.64.70.126:12345');
+        connection = new WebSocket('ws://127.0.0.1:12345');
 
         // When the connection is open, send some data to the server
         connection.onopen = function () {
