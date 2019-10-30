@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <script type="text/javascript" src="btwebscanner.js"></script>
+    
+    <script type="text/javascript">
+        var btwebscanner;
+        var logMsgElement;
+        
+        
+        function setup ()
+        {
+            logMsgElement = document.getElementById("logMsg");
+            btwebscanner=new BTWebScanner(onNew, onRecv);
+        }
+        function onNew(msg){
+            doLog("onNew" + msg);
+        }
+        function onRecv(msg, rcode){
+            doLog("Received: " + msg);
+            if(rcode==returncodes.SCAN_DATA){
+                document.getElementById("BarcodeData").value=msg;
+            }
+        }
+        function openButtonClicked(){
+            btwebscanner.connect("C0:EE:40:41:51:B7", onBTconnected);
+        }
+        function onBTconnected(msg){
+            doLog("onBTconnected" + msg);
+            document.getElementById("openButton").disabled=true;
+            document.getElementById("closeButton").disabled=false;
+        }
+        function closeButtonClicked(){
+            btwebscanner.disconnect(onDisconnect);
+        }
+        function onDisconnect(msg){
+            doLog("onDisconnect: " + msg);
+            document.getElementById("openButton").disabled=false;
+            document.getElementById("closeButton").disabled=true;
+        }
+        function doLog(msg){
+            console.log(msg);
+            logMsgElement.innerHTML += "<br>\r\n" + msg;
+        }
+        </script>
+    </head>
+    <body onload="setup();">
+        <h3>Basic BT Web Scanner API Sample</h3>
+        <input type="button" value="Open Reader" id="openButton" onclick="openButtonClicked()">
+        <input type="button" value="Close Reader" id="closeButton" onclick="closeButtonClicked()" disabled>
+        <br>
+        <div>
+            <b>Barcode Data Read</b><br>
+            <label for="BarcodeData">Data:</label><input type="text" id="BarcodeData" size=20/><br>
+            <label for="SymbType">Symbology:</label><input type="text" id="SymbType" size=16/><br>
+            <label for="ReadTime">Time:</label><input type="text" id="ReadTime" size=24/><br>
+        </div>
+        <br>
+        <div id="logMsg">
+            <b>Log:</b>
+        </div>
+    </body>
+</html>
