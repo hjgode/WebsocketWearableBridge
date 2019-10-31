@@ -59,7 +59,7 @@ public class btScanCtrl {
     }
 
     public static String sIsACK(String sIN) {
-        int iPosAck = sIN.indexOf("\\x06");
+        int iPosAck = sIN.indexOf("\u0006");
         if ((iPosAck >= 0)) {
             return sIN.substring(0, iPosAck);
         }
@@ -68,7 +68,7 @@ public class btScanCtrl {
     }
 
     public static String sIsDataOnly(String sIN) {
-        int iPosCR = sIN.indexOf("\\x0D");
+        int iPosCR = sIN.indexOf("\r");
         if ((iPosCR >= 0)) {
             return sIN.substring(0, iPosCR);
         }
@@ -108,12 +108,12 @@ public class btScanCtrl {
 
     public static byte[] setTriggerOnMsg() {
         //  SYN T CR
-        return myGetBytes("\\x16T\\x0d");
+        return myGetBytes("\u0016T\r");
     }
 
     public static byte[] setTriggerOffMsg() {
         //  SYN U CR
-        return myGetBytes("\\x16U\\x0d");
+        return myGetBytes("\u0016U\r");
     }
 
     public static byte[] setManualTriggerMode() {

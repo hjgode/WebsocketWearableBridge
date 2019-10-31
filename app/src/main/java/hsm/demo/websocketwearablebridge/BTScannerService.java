@@ -38,7 +38,7 @@ public class BTScannerService {
     private Handler mHandler=null;
     private AcceptThread mAcceptThread;
     private ConnectThread mConnectThread;
-    private ConnectedThread mConnectedThread;
+    private CommunicationThread mCommunicationThread;
     private int mState;
     /**
      * Constructor. Prepares a new BluetoothChat session.
@@ -78,7 +78,7 @@ public class BTScannerService {
         // Cancel any thread attempting to make a connection
         if (mConnectThread != null) {mConnectThread.cancel(); mConnectThread = null;}
         // Cancel any thread currently running a connection
-        if (mConnectedThread != null) {mConnectedThread.cancel(); mConnectedThread = null;}
+        if (mCommunicationThread != null) {mCommunicationThread.cancel(); mCommunicationThread = null;}
         // Start the thread to listen on a BluetoothServerSocket
         if (mAcceptThread == null) {
             mAcceptThread = new AcceptThread();
@@ -100,14 +100,14 @@ public class BTScannerService {
             if (mConnectThread != null) {mConnectThread.cancel(); mConnectThread = null;}
         }
         // Cancel any thread currently running a connection
-        if (mConnectedThread != null) {mConnectedThread.cancel(); mConnectedThread = null;}
+        if (mCommunicationThread != null) {mCommunicationThread.cancel(); mCommunicationThread = null;}
         // Start the thread to connect with the given device
         mConnectThread = new ConnectThread(device);
         mConnectThread.start();
         setState(Constants.STATE_CONNECTING);
     }
     /**
-     * Start the ConnectedThread to begin managing a Bluetooth connection
+     * Start the CommunicationThread to begin managing a Bluetooth connection
      * @param socket  The BluetoothSocket on which the connection was made
      * @param device  The BluetoothDevice that has been connected
      */
@@ -116,12 +116,12 @@ public class BTScannerService {
         // Cancel the thread that completed the connection
         if (mConnectThread != null) {mConnectThread.cancel(); mConnectThread = null;}
         // Cancel any thread currently running a connection
-        if (mConnectedThread != null) {mConnectedThread.cancel(); mConnectedThread = null;}
+        if (mCommunicationThread != null) {mCommunicationThread.cancel(); mCommunicationThread = null;}
         // Cancel the accept thread because we only want to connect to one device
         if (mAcceptThread != null) {mAcceptThread.cancel(); mAcceptThread = null;}
         // Start the thread to manage the connection and perform transmissions
-        mConnectedThread = new ConnectedThread(socket);
-        mConnectedThread.start();
+        mCommunicationThread = new CommunicationThread(socket);
+        mCommunicationThread.start();
         // Send the name of the connected device back to the UI Activity
         Message msg = mHandler.obtainMessage(Constants.MESSAGE_DEVICE_NAME);
         Bundle bundle = new Bundle();
@@ -137,22 +137,22 @@ public class BTScannerService {
     public synchronized void stop() {
         if (D) Log.d(TAG, "stop");
         if (mConnectThread != null) {mConnectThread.cancel(); mConnectThread = null;}
-        if (mConnectedThread != null) {mConnectedThread.cancel(); mConnectedThread = null;}
+        if (mCommunicationThread != null) {mCommunicationThread.cancel(); mCommunicationThread = null;}
         if (mAcceptThread != null) {mAcceptThread.cancel(); mAcceptThread = null;}
         setState(Constants.STATE_NONE);
     }
     /**
-     * Write to the ConnectedThread in an unsynchronized manner
+     * Write to the CommunicationThread in an unsynchronized manner
      * @param out The bytes to write
-     * @see ConnectedThread#write(byte[])
+     * @see CommunicationThread#write(byte[])
      */
     public void write(byte[] out) {
         // Create temporary object
-        ConnectedThread r;
-        // Synchronize a copy of the ConnectedThread
+        CommunicationThread r;
+        // Synchronize a copy of the CommunicationThread
         synchronized (this) {
             if (mState != Constants.STATE_CONNECTED) return;
-            r = mConnectedThread;
+            r = mCommunicationThread;
         }
         // Perform the write unsynchronized
         Log.d(TAG, "calling r.write: " + new String(out));
@@ -313,12 +313,12 @@ public class BTScannerService {
      * This thread runs during a connection with a remote device.
      * It handles all incoming and outgoing transmissions.
      */
-    private class ConnectedThread extends Thread {
+    private class CommunicationThread extends Thread {
         private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
-        public ConnectedThread(BluetoothSocket socket) {
-            Log.d(TAG, "create ConnectedThread");
+        public CommunicationThread(BluetoothSocket socket) {
+            Log.d(TAG, "create CommunicationThread");
             mmSocket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
@@ -334,7 +334,7 @@ public class BTScannerService {
             mmOutStream = tmpOut;
         }
         public void run() {
-            Log.i(TAG, "BEGIN mConnectedThread");
+            Log.i(TAG, "BEGIN mCommunicationThread");
             byte[] buffer = new byte[1024];
             int bytes;
             // Keep listening to the InputStream while connected

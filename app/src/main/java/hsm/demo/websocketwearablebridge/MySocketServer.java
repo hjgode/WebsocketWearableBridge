@@ -71,10 +71,10 @@ public class MySocketServer extends WebSocketServer {
         }else if(message.startsWith(Constants.BT_DISCONNECT)){
             btScannerService.stop();
         }
-        else if(message.startsWith("BTSEND"))
+        else if(message.startsWith(Constants.BT_SEND))
         {
             if (btScannerService.getState() == Constants.STATE_CONNECTED) {
-                String btSend=message.substring("BTSEND".length());
+                String btSend=message.substring(Constants.BT_SEND.length());
                 if(btSend=="BEEP")
                     btScannerService.write(btScanCtrl.setDoBeep());
                 else
