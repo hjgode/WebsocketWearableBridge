@@ -28,7 +28,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
-import de.greenrobot.event.EventBus;
+//import de.greenrobot.event.EventBus;
 
 import static android.app.Service.START_NOT_STICKY;
 import static hsm.demo.websocketwearablebridge.MainActivity.m_handler;
@@ -76,16 +76,24 @@ public class MyWebSocketService extends Service {
 
                         }
                     }
+                }else if (msg.what==Constants.MESSAGE_ONMESSSAGE) {
+                    if (mServer != null) {
+                        String sMsg=msg.getData().getString("MESSAGE");
+                        addLog("ONMESSSAGE: "+ sMsg);
+                    }
+                }else if (msg.what==Constants.MESSAGE_STATE_CHANGE) {
+                    if (mServer != null) {
+                        String sMsg="" + msg.getData().getInt("STATE");
+                        addLog("STATE_CHANGE: "+ sMsg);
+                    }
                 }
             }
         };
-        EventBus.getDefault().register(this);
-        EventBus.getDefault().post(new SocketServiceEvent("Service onCreate() done"));
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        EventBus.getDefault().post(new SocketServiceEvent("Service onStartCommand(): " + intent.toString() +", start ID=" + startId));
+        addLog("Service onStartCommand(): " + intent.toString() +", start ID=" + startId);
 
         String input = intent.getStringExtra("inputExtra");
         createNotificationChannel();
@@ -100,7 +108,6 @@ public class MyWebSocketService extends Service {
                 .setContentIntent(pendingIntent)
                 .build();
 
-        EventBus.getDefault().post(new SocketServiceEvent("Service startForeground"));
         startForeground(1, notification);
 
         //do heavy work on a background thread
@@ -136,10 +143,8 @@ public class MyWebSocketService extends Service {
             addLog("local IP="+inetAddress.toString());
         }
 
-        EventBus.getDefault().post(new SocketServiceEvent ("WebSocketServer starting..."));
         mServer = new MySocketServer(new InetSocketAddress(inetAddress.getHostAddress(), SERVER_PORT), m_context, m_handler );
         mServer.start();
-        EventBus.getDefault().post(new SocketServiceEvent ("WebSocketServer started."));
     }
 
     @Override
@@ -151,20 +156,22 @@ public class MyWebSocketService extends Service {
         }
         catch (InterruptedException e){}
         catch (IOException e){}
-        EventBus.getDefault().post(new SocketServiceEvent ("WebSocketServerService onDestroy"));
+        //EventBus.getDefault().post(new SocketServiceEvent ("WebSocketServerService onDestroy"));
+        addLog("WebSocketServerService onDestroy");
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+        //EventBus.getDefault().unregister(this);
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        EventBus.getDefault().post(new SocketServiceEvent ("WebSocketServerService onBind"));
+        //EventBus.getDefault().post(new SocketServiceEvent ("WebSocketServerService onBind"));
+        addLog("WebSocketServerService onBind");
         return null;
     }
 
     private void createNotificationChannel() {
-        EventBus.getDefault().post(new SocketServiceEvent ("WebSocketServerService createNotificationChannel()"));
+        addLog("WebSocketServerService createNotificationChannel()");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel serviceChannel = new NotificationChannel(
                     CHANNEL_ID,
@@ -204,8 +211,10 @@ public class MyWebSocketService extends Service {
     }
     void addLog(String m){
         Log.d(TAG, m);
-        EventBus.getDefault().post(new SocketServiceEvent ("WebSocketServerService: " +m ));
+        //EventBus.getDefault().post(new SocketServiceEvent ("WebSocketServerService: " +m ));
     }
+
+    /*
     //handles messages by websocket server
     @SuppressWarnings("UnusedDeclaration")
     public void onEvent(SocketControlEvent event) {
@@ -214,9 +223,5 @@ public class MyWebSocketService extends Service {
         //mServer.sendMessage("echo: " + message);
         EventBus.getDefault().post(new MyMessage(MyMessage.eType.infoType, MyMessage.eSource.srcWebsocketServer, event.getMessage(),null));
     }
-    @SuppressWarnings("UnusedDeclaration")
-    public void onEvent(MyMessage  mMsg) {
-        JSONObject jsonObject =mMsg.getJsonObject();
-        Log.d(TAG, "on MyMessageEvent: " + mMsg.toString());
-    }
+    */
 }

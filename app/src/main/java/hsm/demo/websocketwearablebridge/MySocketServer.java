@@ -3,6 +3,8 @@ package hsm.demo.websocketwearablebridge;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 
 import org.java_websocket.WebSocket;
@@ -20,8 +22,6 @@ import java.util.Enumeration;
 
 import android.os.Handler;
 
-import de.greenrobot.event.EventBus;
-
 public class MySocketServer extends WebSocketServer {
 
     private WebSocket mSocket;
@@ -31,16 +31,19 @@ public class MySocketServer extends WebSocketServer {
     private Context m_context;
     private Handler m_handler;
 
+    BluetoothAdapter mBluetoothAdapter=null;
+    BluetoothDevice device=null;
+
     public MySocketServer(InetSocketAddress address, Context context, Handler handler) {
         super(address);
         m_context=context;
         m_handler=handler;
         Log.d(TAG, "MySocketServer Started");
-        EventBus.getDefault().register(this);
     }
 
+    //Destructor
     public void finalize() {
-        EventBus.getDefault().unregister(this);
+        btScannerService.stop();
     }
 
     @Override
@@ -82,8 +85,12 @@ public class MySocketServer extends WebSocketServer {
             }
         }
         else{
-            //EventBus.getDefault().post(new SocketMessageEvent(message));
-            EventBus.getDefault().post((new MyMessage(MyMessage.eType.infoType, MyMessage.eSource.srcWebsocketClient, message, null)));
+            Message msg=new Message();
+            msg.what=Constants.MESSAGE_ONMESSSAGE;
+            Bundle bundle=new Bundle();
+            bundle.putString("MESSAGE", message);
+            msg.setData(bundle);
+            m_handler.sendMessage(msg);
         }
     }
 
@@ -114,32 +121,8 @@ public class MySocketServer extends WebSocketServer {
 
     }
 
-    BluetoothAdapter mBluetoothAdapter=null;
-    BluetoothDevice device=null;
+    public void onEvent(){
 
-    //handles control messages from base websocket class
-    @SuppressWarnings("UnusedDeclaration")
-    public void onEvent(SocketControlEvent event) {
-        String message=event.getMessage();
-        Log.d(TAG, "onEvent SocketControlEvent: " + message);
-        //sendMessage(message);
-        if(message.startsWith(Constants.BT_CONNECT_MAC)){
-            String sMac=message.substring(Constants.BT_CONNECT_MAC.length());
-            btScannerService=new BTScannerService(m_context, m_handler);
-            // Get local Bluetooth adapter
-            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-            //find device
-            device = mBluetoothAdapter.getRemoteDevice(sMac);
-            //connect to BT device
-            btScannerService.connect(device);
-            Log.d(TAG, "scanner service state="+btScannerService.getState());
-        }
     }
 
-
-    @SuppressWarnings("UnusedDeclaration")
-    public void onEvent(MyMessage  mMsg) {
-        JSONObject jsonObject =mMsg.getJsonObject();
-        Log.d(TAG, "on MyMessageEvent: " + mMsg.toString());
-    }
 }

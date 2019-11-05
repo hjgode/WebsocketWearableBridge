@@ -16,8 +16,6 @@ import android.os.Message;
 import android.util.Log;
 import android.util.Xml;
 
-import de.greenrobot.event.EventBus;
-
 /**
  * This class does all the work for setting up and managing Bluetooth
  * connections with other devices. It has a thread that listens for
@@ -49,8 +47,6 @@ public class BTScannerService {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = Constants.STATE_NONE;
         mHandler = handler;
-        //enable event receiving
-        EventBus.getDefault().register(this);
     }
     /**
      * Set the current state of the chat connection
@@ -60,8 +56,14 @@ public class BTScannerService {
         if (D) Log.d(TAG, "setState() " + mState + " -> " + state);
         mState = state;
         // Give the new state to the Handler so the UI Activity can update
-        mHandler.obtainMessage(Constants.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
-        postMessage(""+state);
+        //mHandler.obtainMessage(Constants.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
+        Message msg=new Message();
+        msg.what=Constants.MESSAGE_STATE_CHANGE;
+        Bundle bundle=new Bundle();
+        bundle.putInt("STATE", state);
+        msg.setData(bundle);
+        mHandler.sendMessage(msg);
+
     }
 
     /**
@@ -88,6 +90,14 @@ public class BTScannerService {
 
  */
         setState(Constants.STATE_CONNECTED);
+/*
+        Message msg=new Message();
+        msg.what=Constants.MESSAGE_STATE_CHANGE;
+        Bundle bundle=new Bundle();
+        bundle.putInt("STATE", Constants.STATE_CONNECTED);
+        msg.setData(bundle);
+        mHandler.sendMessage(msg);
+*/
     }
     /**
      * Start the ConnectThread to initiate a connection to a remote device.
@@ -128,7 +138,6 @@ public class BTScannerService {
         bundle.putString(Constants.DEVICE_NAME, device.getName());
         msg.setData(bundle);
         mHandler.sendMessage(msg);
-        postMessage(new MyMessage(MyMessage.eType.infoType, MyMessage.eSource.srcBTService, "connected to "+device.getName(),null));
         setState(Constants.STATE_CONNECTED);
     }
     /**
@@ -387,32 +396,5 @@ public class BTScannerService {
             }
         }
     }
-    //handles control messages from base websocket class
-    @SuppressWarnings("UnusedDeclaration")
-    public void onEvent(MyMessage mMsg) {
-        String message=mMsg.toString();
-        Log.d(TAG, "onEvent MyMessageEvent: " + message);
-        //sendMessage(message);
-/*
-        if(message.startsWith(Constants.BT_CONNECT_MAC)){
-            String sMac=message.substring(Constants.BT_CONNECT_MAC.length());
-            btScannerService=new BTScannerService(m_context, m_handler);
-            // Get local Bluetooth adapter
-            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-            //find device
-            device = mBluetoothAdapter.getRemoteDevice(sMac);
-            //connect to BT device
-            btScannerService.connect(device);
-            Log.d(TAG, "scanner service state="+btScannerService.getState());
-        }
-*/
-    }
 
-    void postMessage(String sData){
-        MyMessage mMsg=MyMessage.newInfoMessage(sData, MyMessage.eSource.srcBTService);
-        EventBus.getDefault().post(mMsg);
-    }
-    void postMessage(MyMessage mMsg){
-        EventBus.getDefault().post(mMsg);
-    }
 }
