@@ -32,6 +32,7 @@ public class Constants {
     public static final String BT_CONNECT_MAC = "BTCONNECT";
     public static final String BT_DISCONNECT ="BTDISCONNECT";
     public static final String BT_SEND = "BTSEND";
+    public static final String BT_DECHDR = "DECHDR"; //append 0 or 1
 
     public static final String START_ON_BOOT = "START_ON_BOOT";
 }

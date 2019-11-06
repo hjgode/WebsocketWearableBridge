@@ -85,6 +85,7 @@ public class MyWebSocketService extends Service {
                     if (mServer != null) {
                         String sMsg="" + msg.getData().getInt("STATE");
                         addLog("STATE_CHANGE: "+ sMsg);
+                        mServer.sendMessage("BTSTATE="+sMsg);
                     }
                 }
             }

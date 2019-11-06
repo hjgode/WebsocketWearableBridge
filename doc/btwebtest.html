@@ -13,24 +13,52 @@
         function setup ()
         {
             logMsgElement = document.getElementById("logMsg");
-            btwebscanner=new BTWebScanner(onNew, onRecv);
+            btwebscanner=new BTWebScanner(onOpen, onRecv);
         }
-        function onNew(msg){
-            doLog("onNew" + msg);
+        function onOpen(msg, rcode){
+            if(rcode==returncodes.NOT_CONNECTED){
+                doLog("websocket connect failed: " + msg);
+                document.getElementById("openButton").disabled=true;
+            }else if (rcode==returncodes.CONNECTED){
+                doLog("websocket connected: " + msg);
+                document.getElementById("openButton").disabled=false;
+            }
         }
         function onRecv(msg, rcode){
             doLog("Received: " + msg);
             if(rcode==returncodes.SCAN_DATA){
                 document.getElementById("BarcodeData").value=msg;
             }
+            else if(rcode==returncodes.NOT_CONNECTED){
+                doLog("websocket not connected");
+            }
+            else if(rcode==returncodes.BTCONNECT_OK){
+                doLog("BT connected: " + msg);
+                btwebscanner.send("BTSENDBEEP", onSendCallback);
+                btwebscanner.send("BTSENDDECHDR1", onSendCallback);
+            }
+            else if(rcode==returncodes.BTCONNECT_FAILED){
+                doLog("BT connect FAILED: " + msg);
+            }
+            else{
+                doLog("rcode not implemented " + rcode + ", " + msg);
+            }
         }
         function openButtonClicked(){
             btwebscanner.connect("C0:EE:40:41:51:B7", onBTconnected);
         }
-        function onBTconnected(msg){
+        function onBTconnected(msg, rcode){
             doLog("onBTconnected" + msg);
-            document.getElementById("openButton").disabled=true;
-            document.getElementById("closeButton").disabled=false;
+            if(rcode==returncodes.BTCONNECT_OK){
+                document.getElementById("openButton").disabled=true;
+                document.getElementById("closeButton").disabled=false;
+            }
+        }
+        function onSendCallback(msg, rcode){
+            if(rcode==returncodes.SUCCESS)
+                doLog("send OK: " + msg);
+            else
+                doLog("send failed: " + msg);
         }
         function closeButtonClicked(){
             btwebscanner.disconnect(onDisconnect);

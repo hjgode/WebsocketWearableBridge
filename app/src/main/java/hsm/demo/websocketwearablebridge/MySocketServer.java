@@ -80,6 +80,15 @@ public class MySocketServer extends WebSocketServer {
                 String btSend=message.substring(Constants.BT_SEND.length());
                 if(btSend=="BEEP")
                     btScannerService.write(btScanCtrl.setDoBeep());
+                else if(btSend.startsWith(Constants.BT_DECHDR)){
+                    String s=btSend.substring(Constants.BT_DECHDR.length());
+                    byte[] bdechdr;
+                    if(s.startsWith("1"))
+                        bdechdr=btScanCtrl.setDecHeaderSetting(true);
+                    else
+                        bdechdr=btScanCtrl.setDecHeaderSetting(false);
+                    btScannerService.write(bdechdr);
+                }
                 else
                     btScannerService.write(btScanCtrl.myGetBytes(btSend));
             }
