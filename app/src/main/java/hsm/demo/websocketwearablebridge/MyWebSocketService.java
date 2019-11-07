@@ -66,11 +66,18 @@ public class MyWebSocketService extends Service {
                     if(mServer!=null) {
                         byte[] bData=msg.getData().getByteArray("DATA");
                         try {
-                            String sData = new String(bData, "UTF-8");
-                            if(sData.contains("\u0006") || sData.contains("\u0015")) { // 06=ACK, 21(0x15)=NAK
-                                mServer.sendMessage(sData);
+                            JSONObject obj=btScanCtrl.getBarcodeDataJSON(bData);
+                            if(obj!=null && obj.length()>0){
+                                mServer.sendMessage("SCAN_DATAJSON"+obj.toString());
                             }else{
-                                mServer.sendMessage("SCAN_DATA" + sData);
+                                String sData = new String(bData, "UTF-8");
+                                if(sData.contains("\u0006")) {
+                                    mServer.sendMessage("ACK_MESSAGE"+sData);
+                                }else if(sData.contains("\u0015")) { // 06=ACK, 21(0x15)=NAK
+                                    mServer.sendMessage("NACK_MESSAGE"+sData);
+                                }else{
+                                    mServer.sendMessage("SCAN_DATA" + sData);
+                                }
                             }
                         }catch (UnsupportedEncodingException e){
 

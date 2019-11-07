@@ -1,5 +1,9 @@
 package hsm.demo.websocketwearablebridge;
 
+import android.util.Log;
+
+import org.json.JSONObject;
+
 import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -7,7 +11,7 @@ import java.util.Arrays;
 import static java.lang.System.arraycopy;
 
 public class btScanCtrl {
-
+    final static String TAG="MyBTScanCtrl";
 
     public static String toHex(String sIN) {
         if ((sIN == null)) {
@@ -49,10 +53,51 @@ public class btScanCtrl {
             // => MSGGET0022IC1<1d>1012345678<1d>2187654321<d><0><0>
             String sMSG = new String(bDataMSG, StandardCharsets.UTF_8);
             // now we get the message length
-            int iMsgLen = Integer.getInteger(sMSG.substring(6, 4));
+            int iMsgLen = Integer.getInteger(sMSG.substring(6, 6+4));
             //  look at MSGGET0022...
-            bcData = new BarcodeData(sMSG.substring(10, 3));
-            bcData.sData = sMSG.substring(13, iMsgLen);
+            bcData = new BarcodeData(sMSG.substring(10, 10+3));
+            bcData.sData = sMSG.substring(13, 13 + iMsgLen);
+        }
+
+        return bcData;
+    }
+
+    public static JSONObject getBarcodeDataJSON(byte[] bData) {
+        JSONObject bcData = new JSONObject();
+        if (((bData[0] == 22)
+                && ((bData[1] == -2)
+                && (bData[6] == 13)))) {
+            byte[] bLen = new byte[4];
+            arraycopy(bData, 2, bLen, 0, 4); //Array.ConstrainedCopy(bData, 2, bLen, 0, 4);
+            int uL = toInt32_2(bLen, 0);
+            byte[] bDataMSG = new byte[uL]; //12 is length of time stamp plus a 0x0d
+            arraycopy(bData, 7, bDataMSG, 0, uL); //Array.ConstrainedCopy(bData, 7, bDataMSG, 0, ((int)(uL)));
+            // => MSGGET0022IC1<1d>1012345678<1d>2187654321<d><0><0>
+            //    0....5....1..5   ....2....5....3....5....4....5
+            //              0         0         0         0
+
+            String sMSG = new String(bDataMSG, StandardCharsets.UTF_8);
+            // now we get the message length, example 0022
+            int iMsgLen=0;
+            try {
+                Log.d(TAG, "Length= " +sMSG.length());
+                String sCount=sMSG.length()>10 ? sMSG.substring(6,10) : sMSG.substring((6));
+                iMsgLen = Integer.parseInt (sCount, 10);
+            }catch(StringIndexOutOfBoundsException ex) {Log.d(TAG, "StringIndexOutOfBoundsException for parseInt for " + sMSG.substring(6, 4) + ": " + ex.getMessage());
+            }catch(NumberFormatException ex){Log.d(TAG, "NumberFormatException for parseInt for "+sMSG.substring(6, 4)+": " + ex.getMessage());
+            }catch(Exception ex){Log.d(TAG, "Exception for parseInt for "+sMSG.substring(6, 4)+": " + ex.getMessage());}
+            String sHONid=sMSG.substring(10,11);
+            String sAIMid=sMSG.substring(11,13);
+            String sData=sMSG.substring(14,14+iMsgLen);
+            //  look at MSGGET0022...
+            try {
+                bcData.put("HONID", sHONid);
+                bcData.put("AIMID", sAIMid);
+                bcData.put("DATA", sData);
+//                bcData.put("TIME", sMSG.substring(iMsgLen+2, 12+iMsgLen));
+            }catch (Exception ex){
+                Log.d(TAG, "Exception: " + ex.getMessage());
+            }
         }
 
         return bcData;

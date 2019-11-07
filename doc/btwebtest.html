@@ -26,7 +26,13 @@
         }
         function onRecv(msg, rcode){
             doLog("Received: " + msg);
-            if(rcode==returncodes.SCAN_DATA){
+            if(rcode==returncodes.SCAN_DATAJSON){
+                var myScanData = JSON.parse(msg);
+                document.getElementById("BarcodeData").value=myScanData.DATA;
+                document.getElementById("SymbType").value=myScanData.AIMID;
+                document.getElementById("ReadTime").value=myScanData.HONID;
+            }
+            else if(rcode==returncodes.SCAN_DATA){
                 document.getElementById("BarcodeData").value=msg;
             }
             else if(rcode==returncodes.NOT_CONNECTED){
@@ -36,6 +42,12 @@
                 doLog("BT connected: " + msg);
                 btwebscanner.send("BTSENDBEEP", onSendCallback);
                 btwebscanner.send("BTSENDDECHDR1", onSendCallback);
+            }
+            else if(rcode==returncodes.NACK_MESSAGE){
+                doLog("NACK msg: " + msg);
+            }
+            else if(rcode==returncodes.ACK_MESSAGE){
+                doLog("ACK msg: " + msg);
             }
             else if(rcode==returncodes.BTCONNECT_FAILED){
                 doLog("BT connect FAILED: " + msg);

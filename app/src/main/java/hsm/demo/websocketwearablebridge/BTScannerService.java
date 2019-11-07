@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -353,6 +354,8 @@ public class BTScannerService {
                     bytes = mmInStream.read(buffer);
                     byte[] bData=new byte[bytes];
                     System.arraycopy(buffer,0, bData,0,bytes);
+                    String sD=new String(bData, StandardCharsets.UTF_8);
+                    Log.d(TAG, "BT read: " + sD);
                     // Send the obtained bytes to the UI Activity
                     Bundle bundle=new Bundle();
                     bundle.putInt("MESSAGE_READ", Constants.MESSAGE_READ);

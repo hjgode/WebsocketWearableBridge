@@ -1,6 +1,9 @@
 var connection;
 var BTState=0;
 const returncodes = {
+    NACK_MESSAGE:8,
+    ACK_MESSAGE:7,
+    SCAN_DATAJSON:6,
     BTCONNECT_OK:5,
     CONNECTED:4,
     SCAN_DATA:3,
@@ -9,6 +12,7 @@ const returncodes = {
     OPEN_FAILED:-1,
     BTCONNECT_FAILED:-2,
     NOT_CONNECTED:-3,
+    UNDEFINED:-4,
 };
 
 class BTWebScanner{
@@ -33,16 +37,27 @@ class BTWebScanner{
         
         // Log messages from the server
         connection.onmessage = function (e) {
-            if(e.data.startsWith("SCAN_DATA")){
+            if(e.data.startsWith("SCAN_DATAJSON")){
+                onRecvCallback(e.data.substring("SCAN_DATAJSON".length), returncodes.SCAN_DATAJSON);
+                }
+            else if(e.data.startsWith("SCAN_DATA")){
                 onRecvCallback(e.data.substring("SCAN_DATA".length), returncodes.SCAN_DATA);
-            }else if(e.data.startsWith("BTSTATE=")){
+            }
+            else if(e.data.startsWith("BTSTATE=")){
                 BTState=e.data.substring("BTSTATE=".length);
                 if(BTState=="3")
                     onRecvCallback("State=" + BTState + e.data, returncodes.BTCONNECT_OK);
                 else
                     onRecvCallback("State=" + BTState + e.data, returncodes.BTCONNECT_FAILED);
-            }else{
-                onRecvCallback(e.data);
+            }
+            else if(e.data.startsWith("ACK_MESSAGE")){
+                onRecvCallback(e.data.substring("ACK_MESSAGE".length), returncodes.ACK_MESSAGE);
+            }
+            else if(e.data.startsWith("NACK_MESSAGE")){
+                onRecvCallback(e.data.substring("NACK_MESSAGE".length), returncodes.NACK_MESSAGE);
+            }
+            else{
+                onRecvCallback(e.data, returncodes.UNDEFINED);
             }
             doLog("server: " + e.data);
         };
